@@ -6,3 +6,6 @@ This year, I'm attempting to solve all Advent of Code problems with the followin
   This is to help me develop a good understanding of what's available with TypeScript/ES6 out
   of the box, and lets me run through the secondary exercise of building some higher-level
   functional tooling in a new language from the ground up.
+- A complete script for a day should emit separate solutions for both parts. This is an added
+  challenge to both keep a historical record of the part 1 solution instead of clobbering it
+  for part 2 and as a challenge to extract relevant common components between the two.

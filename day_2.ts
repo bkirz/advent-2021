@@ -1,11 +1,7 @@
 import { strict as assert } from 'assert';
 import fs from 'fs';
 
-enum Direction {
-    DOWN = "down",
-    FORWARD = "forward",
-    UP = "up",
-}
+enum Direction { DOWN, FORWARD, UP }
 
 interface Movement {
     direction: Direction,

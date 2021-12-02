@@ -12,10 +12,18 @@ interface Movement {
     magnitude: number,
 }
 
-interface Position {
+interface Part1Position {
     horizontal: number,
     depth: number,
 }
+
+interface Part2Position {
+    horizontal: number,
+    depth: number,
+    aim: number,
+}
+
+type Positions = [Part1Position, Part2Position];
 
 const parseLine = (line: string): Movement => {
     const components = line.split(" ");
@@ -29,18 +37,28 @@ const parseLine = (line: string): Movement => {
 const input = fs.readFileSync('/Users/bkirz/dev/advent_2021/day_2.input');
 const movements: Movement[] = input.toString().split("\n").map(parseLine);
 
-const applyMovement = (pos: Position, movement: Movement): Position => {
-    console.log("Applying movement ", movement, " to ", pos);
+const applyMovement = ([p1pos, p2pos]: Positions, movement: Movement): Positions => {
     if (movement.direction === Direction.DOWN) {
-        return {...pos, depth: pos.depth + movement.magnitude};
+        return [
+            {...p1pos, depth: p1pos.depth + movement.magnitude},
+            {...p2pos, aim: p2pos.aim + movement.magnitude},
+        ];
     } else if (movement.direction === Direction.UP) {
-        return {...pos, depth: pos.depth - movement.magnitude};
+        return [
+            {...p1pos, depth: p1pos.depth - movement.magnitude},
+            {...p2pos, aim: p2pos.aim - movement.magnitude},
+        ];
     } else if (movement.direction === Direction.FORWARD) {
-        return {...pos, horizontal: pos.horizontal + movement.magnitude};
+        return [
+            {...p1pos, horizontal: p1pos.horizontal + movement.magnitude},
+            {...p2pos, horizontal: p2pos.horizontal + movement.magnitude, depth: p2pos.depth + p2pos.aim * movement.magnitude},
+        ];
     }
 }
 
-const startingPosition: Position = {horizontal: 0, depth: 0};
-const finalPosition = movements.reduce(applyMovement, startingPosition);
-const part1Result = finalPosition.horizontal * finalPosition.depth;
-console.log("Part 1: ", part1Result);
+const startingPositions: Positions = [{horizontal: 0, depth: 0}, {horizontal: 0, depth: 0, aim: 0}];
+const [part1FinalPosition, part2FinalPosition] = movements.reduce(applyMovement, startingPositions);
+const part1Result = part1FinalPosition.horizontal * part1FinalPosition.depth;
+const part2Result = part2FinalPosition.horizontal * part2FinalPosition.depth;
+console.log("Part 1:", part1Result);
+console.log("Part 2:", part2Result);

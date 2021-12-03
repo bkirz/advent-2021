@@ -9,7 +9,8 @@
   "license": "ISC",
   "scripts": {
     "day1": "cp day_1.input dist && tsc && node dist/day_1.js",
-    "day2": "cp day_2.input dist && tsc && node dist/day_2.js"
+    "day2": "cp day_2.input dist && tsc && node dist/day_2.js",
+    "day3": "cp day_3.input dist && tsc && node dist/day_3.js"
   },
   "devDependencies": {
     "tslint": "^6.1.3",

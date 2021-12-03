@@ -6,19 +6,19 @@ const lineToCountsArray = (line: string): countsArray => {
     return line.split('').map((char) => char === "1" ? 1 : 0);
 }
 
-const addCountsArrays = (a: countsArray, b: countsArray): countsArray => {
-    const result = [];
-    for (let index = 0; index < a.length; index++) {
-        result.push(a[index] + b[index]);
-    }
-    return result;
-}
-
 const input = loadInput('day_3.input');
 const countsArrays = input.split("\n").map(lineToCountsArray);
 const threshold = countsArrays.length / 2;
 
 const calcPart1 = (countsArrays: Array<countsArray>): number => {
+    const addCountsArrays = (a: countsArray, b: countsArray): countsArray => {
+        const result = [];
+        for (let index = 0; index < a.length; index++) {
+            result.push(a[index] + b[index]);
+        }
+        return result;
+    }
+
     const summed = countsArrays.reduce(addCountsArrays);
     const [gamma, epsilon] = summed.reduce(([gamma, epsilon], total) => {
         if (total > threshold) {

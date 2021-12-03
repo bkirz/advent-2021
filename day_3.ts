@@ -1,4 +1,4 @@
-import { loadInput, partition } from './helpers';
+import { loadInput } from './helpers';
 
 type countsArray = Array<number>;
 

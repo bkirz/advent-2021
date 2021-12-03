@@ -22,9 +22,9 @@ const calcPart1 = (countsArrays: Array<countsArray>): number => {
     const summed = countsArrays.reduce(addCountsArrays);
     const [gamma, epsilon] = summed.reduce(([gamma, epsilon], total) => {
         if (total > threshold) {
-            return [gamma + "1", epsilon += "0"];
+            return [gamma + "1", epsilon + "0"];
         } else {
-            return [gamma + "0", epsilon += "1"];
+            return [gamma + "0", epsilon + "1"];
         }
     }, ["", ""]);
     return parseInt(gamma, 2) * parseInt(epsilon, 2);

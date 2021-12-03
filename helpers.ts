@@ -36,3 +36,19 @@ export const sum =
   (arr: number[]): number => {
     return arr.reduce((a, b) => { return a + b; }, 0);
   }
+
+// Copies Ruby's Enumerable#partition. Given a list and a predicate,
+// applies the predicate to each element and splits the result into two
+// lists: one for which the predicate returns true, and another for which it returns false.
+export const partition =
+  <T>(arr: T[], predicate: (val: T) => boolean): [T[], T[]] => {
+    const base: [T[], T[]] = [[], []];
+    arr.reduce(([trueVals, falseVals], val) => {
+      if (predicate(val)) {
+        return [trueVals.concat(val), falseVals];
+      } else {
+        return [trueVals, falseVals.concat(val)]
+      }
+    }, base)
+    return base;
+  }

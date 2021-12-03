@@ -20,15 +20,13 @@ const threshold = countsArrays.length / 2;
 
 const calcPart1 = (countsArrays: Array<countsArray>): number => {
     const summed = countsArrays.reduce(addCountsArrays);
-    let gamma = "";
-    let epsilon = "";
-    summed.forEach((total) => {
+    const [gamma, epsilon] = summed.reduce(([gamma, epsilon], total) => {
         if (total > threshold) {
-            gamma += "1"; epsilon += "0";
+            return [gamma + "1", epsilon += "0"];
         } else {
-            epsilon += "1"; gamma += "0";
+            return [gamma + "0", epsilon += "1"];
         }
-    });
+    }, ["", ""]);
     return parseInt(gamma, 2) * parseInt(epsilon, 2);
 }
 

@@ -1,3 +1,11 @@
+import fs from 'fs';
+import path from 'path';
+
+export const loadInput =
+  (filename: string): string => {
+    return fs.readFileSync(path.resolve(__dirname, filename)).toString();
+  };
+
 // Generates an Array containing numbers from start to end.
 export const range =
   (start: number, end: number): number[] => {

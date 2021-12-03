@@ -1,7 +1,6 @@
-import fs from 'fs';
-import { eachCons, sum } from './helpers';
+import { eachCons, loadInput, sum } from './helpers';
 
-const input = fs.readFileSync('/Users/bkirz/dev/advent_2021/day_1.input');
+const input = loadInput('day_1.input');
 const inputValues: number[] = input.toString().split("\n").map(line => parseInt(line, 10));
 
 const part1NumIncreases =

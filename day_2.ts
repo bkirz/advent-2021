@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import fs from 'fs';
+import { loadInput } from './helpers';
 
 enum Direction { DOWN, FORWARD, UP }
 
@@ -30,7 +30,7 @@ const parseLine = (line: string): Movement => {
     };
 }
 
-const input = fs.readFileSync('/Users/bkirz/dev/advent_2021/day_2.input');
+const input = loadInput('day_2.input');
 const movements: Movement[] = input.toString().split("\n").map(parseLine);
 
 const applyMovement = ([p1pos, p2pos]: Positions, movement: Movement): Positions => {

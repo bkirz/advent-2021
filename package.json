@@ -8,8 +8,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "day1": "tsc && node dist/day_1.js",
-    "day2": "tsc && node dist/day_2.js"
+    "day1": "cp day_1.input dist && tsc && node dist/day_1.js",
+    "day2": "cp day_2.input dist && tsc && node dist/day_2.js"
   },
   "devDependencies": {
     "tslint": "^6.1.3",

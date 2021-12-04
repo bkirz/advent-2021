@@ -1,28 +1,25 @@
 import { utimes } from 'fs';
-import { eachSlice, every, find, range, loadInput, exists } from './helpers';
+import { eachSlice, every, find, range, loadInput, exists, partition } from './helpers';
 
 const BOARD_SIZE = 5;
 
 type board = number[][];
 
-// I'd rather make this an interface but JS objects don't have value equality :')
-// [row, col]
-interface coord {
-   row: number;
-   col: number; 
-}
+interface coord { row: number; col: number; }
 
 interface boardState {
     board: board;
     markedCoords: coord[];
 }
 
+interface winningBoard { boardState: boardState; lastCalledNumber: number; }
+
 const parseInput = (input: string): [numberCalls: number[], boardStates: boardState[]] => {
     const [numberCallsLine, ...boardsLines] = input.split("\n").filter(line => line !== "");
     const numberCalls = numberCallsLine.split(",").map(n => parseInt(n, 10));
 
     const boards = eachSlice(boardsLines, BOARD_SIZE).map((boardLines) => { 
-        return boardLines.map(line => line.split(/\s+/).map(n => parseInt(n, 10)));
+        return boardLines.map(line => line.split(/\s+/).filter(line => line !== "").map(n => parseInt(n, 10)));
     });
 
     return [numberCalls, boards.map(board => { return {board: board, markedCoords: []}; })];
@@ -74,14 +71,21 @@ const calculateScore = (boardState: boardState, justCalled: number): number => {
 const input = loadInput('day_4.input');
 let [numberCalls, boardStates] = parseInput(input);
 
-
+let winners: winningBoard[] = [];
 for (const num of numberCalls) {
     console.log("calling number", num);
     boardStates = boardStates.map(state => applyCall(state, num));
-    const winner = find(boardStates, isWinner);
-    if (winner) {
-        console.log("Winning board", winner);
-        console.log("Part 1", calculateScore(winner, num)); 
-        break;
+    const [winnersThisRound, stillPlaying] = partition(boardStates, isWinner);
+    for (const winner of winnersThisRound) {
+        if (winners.length === 0) {
+            console.log("Part 1 winning board", winner);
+            console.log("Part 1", calculateScore(winner, num));
+        }
+        winners.push({boardState: winner, lastCalledNumber: num});
     }
+    boardStates = stillPlaying;
 }
+
+const finalWinner = winners[winners.length - 1];
+console.log("Last winning board", finalWinner.boardState);
+console.log("Part 2", calculateScore(finalWinner.boardState, finalWinner.lastCalledNumber));

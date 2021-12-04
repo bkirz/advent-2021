@@ -16,6 +16,23 @@ export const range =
     return result;
   };
 
+// Given an array and a slice size, splits the array into slices of the given size,
+// including a partial slice if the number of elements is not divisible by the slice size.
+// eachSlice([1, 2, 3, 4, 5, 6, 7], 2) => [[1, 2], [3, 4], [5, 6], [7]]
+export const eachSlice = <T>(arr: T[], sliceSize: number): T[][] => {
+  const result = [];
+  let slice = [];
+  for (let index = 0; index < arr.length; index++) {
+    slice.push(arr[index]);
+    if (slice.length == sliceSize) {
+      result.push(slice);
+      slice = [];
+    }
+  }
+  if (slice.length > 0) { result.push(slice); }
+  return result;
+}
+
 // Given an array of Ts and a consSize, return an array representing a sliding window
 // of values from the array of size consSize.
 export const eachCons =
@@ -43,12 +60,32 @@ export const sum =
 export const partition =
   <T>(arr: T[], predicate: (val: T) => boolean): [T[], T[]] => {
     const base: [T[], T[]] = [[], []];
-    arr.reduce(([trueVals, falseVals], val) => {
+    return arr.reduce(([trueVals, falseVals], val) => {
       if (predicate(val)) {
         return [trueVals.concat(val), falseVals];
       } else {
         return [trueVals, falseVals.concat(val)]
       }
     }, base)
-    return base;
+  }
+
+export const exists =
+  <T>(arr: T[], predicate: (val: T) => boolean): boolean => {
+    for (const elem of arr) {
+      if (predicate(elem)) { return true; }
+    }
+    return false;
+  }
+
+export const every =
+  <T>(arr: T[], predicate: (val: T) => boolean): boolean => {
+    return !exists(arr, (val) => !predicate(val));
+  }
+
+export const find =
+  <T>(arr: T[], predicate: (val: T) => boolean): T | undefined => {
+    for (const elem of arr) {
+      if (predicate(elem)) { return elem; }
+    }
+    return undefined;
   }

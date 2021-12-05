@@ -12,9 +12,6 @@ function parseLine(line: string): Line {
     };
 }
 
-// This only works because of the part 1 assumption that two points
-// on a line either share an x or y coordinate. The algorithm is very
-// wrong if they're not!!!
 function coordsFromLine({start, end}: Line): Coord[] {
     const coords: Coord[] = [];
 

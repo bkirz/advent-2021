@@ -15,13 +15,32 @@ function parseLine(line: string): Line {
 // This only works because of the part 1 assumption that two points
 // on a line either share an x or y coordinate. The algorithm is very
 // wrong if they're not!!!
-function coordsFromLine(line: Line): Coord[] {
+function coordsFromLine({start, end}: Line): Coord[] {
     const coords: Coord[] = [];
-    let [minx, maxx] = [Math.min(line.start.x, line.end.x), Math.max(line.start.x, line.end.x)];
-    let [miny, maxy] = [Math.min(line.start.y, line.end.y), Math.max(line.start.y, line.end.y)];
-    for (let x = minx; x <= maxx; x++) {
+
+    let [miny, maxy] = [Math.min(start.y, end.y), Math.max(start.y, end.y)];
+    let [minx, maxx] = [Math.min(start.x, end.x), Math.max(start.x, end.x)];
+    if (start.x === end.x) {
+        // vertical
         for (let y = miny; y <= maxy; y++) {
-            coords.push({x, y});
+            coords.push({x: start.x, y});
+        }
+    } else if (start.y === end.y) {
+        // horizontal
+        for (let x = minx; x <= maxx; x++) {
+            coords.push({x, y: start.y});
+        }
+    } else if (start.y - end.y + start.x - end.x == 0) {
+        // up and to the left
+        const rightAngleDistance = maxx - minx;
+        for (let n = 0; n <= rightAngleDistance; n++) {
+            coords.push({x: minx + n, y: maxy - n});
+        }
+    } else {
+        // down and to the right
+        const rightAngleDistance = maxx - minx;
+        for (let n = 0; n <= rightAngleDistance; n++) {
+            coords.push({x: minx + n, y: miny + n});
         }
     }
     return coords;
@@ -36,9 +55,13 @@ function horizontalOrVertical({start: {x: sx, y: sy}, end: {x: ex, y: ey}}: Line
     return sx == ex || sy == ey;
 }
 
+function countOverlapCoords(lines: Line[]): number {
+    const coords = lines.map(coordsFromLine).reduce((a, b) => a.concat(b), []);
+    const counts = tally(coords.map(stringifyCoord));
+    return [...counts.values()].filter((count) => count > 1).length;
+}
+
 const lines = loadInput('day_5.input').split("\n").map(parseLine);
 
-const coords = lines.filter(horizontalOrVertical).map(coordsFromLine).reduce((a, b) => a.concat(b), []);
-const counts = tally(coords.map(stringifyCoord));
-const result = [...counts.values()].filter((count) => count > 1).length;
-console.log("Part 1", result);
+console.log("Part 1", countOverlapCoords(lines.filter(horizontalOrVertical)));
+console.log("Part 2", countOverlapCoords(lines));

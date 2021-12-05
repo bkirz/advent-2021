@@ -37,7 +37,7 @@ function coordsFromLine({start, end}: Line): Coord[] {
             coords.push({x: minx + n, y: maxy - n});
         }
     } else {
-        // down and to the right
+        // down and to the left
         const rightAngleDistance = maxx - minx;
         for (let n = 0; n <= rightAngleDistance; n++) {
             coords.push({x: minx + n, y: miny + n});

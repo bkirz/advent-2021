@@ -89,3 +89,15 @@ export const find =
     }
     return undefined;
   }
+
+export function tally<T>(items: T[]): Map<T, number> {
+    const map = new Map<T, number>();
+    items.forEach(elem => {
+      if (map.has(elem)) {
+        map.set(elem, map.get(elem) + 1);
+      } else {
+        map.set(elem, 1);
+      }
+    });
+    return map;
+  }

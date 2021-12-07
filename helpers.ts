@@ -101,3 +101,13 @@ export function tally<T>(items: T[]): Map<T, number> {
     });
     return map;
   }
+
+export function minBy<T, U>(items: T[], transform: (elem: T) => U): T | undefined {
+  if (items.length === 0) { return undefined; }
+  return items.reduce((a, b) => transform(a) < transform(b) ? a : b);
+}
+
+export function maxBy<T, U>(items: T[], transform: (elem: T) => U): T | undefined {
+  if (items.length === 0) { return undefined; }
+  return items.reduce((a, b) => transform(a) > transform(b) ? a : b);
+}

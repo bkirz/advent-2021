@@ -90,6 +90,14 @@ export const find =
     return undefined;
   }
 
+export const indexOf =
+  <T>(arr: T[], predicate: (val: T) => boolean): number => {
+    for (let index = 0; index < arr.length; index++) {
+      if (predicate(arr[index])) { return index; }
+    }
+    return -1;
+  }
+
 export function tally<T>(items: T[]): Map<T, number> {
     const map = new Map<T, number>();
     items.forEach(elem => {

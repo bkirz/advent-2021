@@ -39,7 +39,7 @@ function part2(entries: DisplayEntry[]): number {
     function calculateOutputValue(entry: DisplayEntry): number {
         function disambiguateDigits(uniqueDigits: Digit[]): DisambiguatedDigits {
             // Goal is to disambiguate all digits, not necessarily to identify every segment.
-            // Three are uniquely identifiable by segment count: (1, 4, 7, 8)
+            // Four are uniquely identifiable by segment count: (1, 4, 7, 8)
             const one = entry.uniqueDigits.find(d => d.length === 2);
             const four = entry.uniqueDigits.find(d => d.length === 4);
             const seven = entry.uniqueDigits.find(d => d.length === 3);

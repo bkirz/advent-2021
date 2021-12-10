@@ -15,7 +15,8 @@
     "day6": "cp day_6.input dist && tsc && node dist/day_6.js",
     "day7": "cp day_7.input dist && tsc && node dist/day_7.js",
     "day8": "cp day_8.input dist && tsc && node dist/day_8.js",
-    "day9": "cp day_9.input dist && tsc && node dist/day_9.js"
+    "day9": "cp day_9.input dist && tsc && node dist/day_9.js",
+    "day10": "cp day_10.input dist && tsc && node dist/day_10.js"
   },
   "devDependencies": {
     "tslint": "^6.1.3",

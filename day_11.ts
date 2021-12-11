@@ -6,7 +6,6 @@ function equals(a: Point, b: Point): boolean {
     return a.row === b.row && a.col === b.col;
 }
 
-// If over the flash threshold, 
 const FLASH_THRESHOLD = 9;
 
 type Grid = number[][];

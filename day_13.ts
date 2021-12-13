@@ -7,10 +7,6 @@ interface Fold { axis: string, location: number };
 // a sparse collection of dots.
 type Grid = Dot[];
 
-function dotsEqual(a: Dot, b: Dot): boolean {
-    return a.x === b.x && a.y === b.y;
-}
-
 function parseDot(str: string): Dot {
     const [x, y] = str.split(',').map(n => parseInt(n));
     return {x, y};
@@ -39,6 +35,28 @@ function foldGrid(grid: Grid, fold: Fold): Grid {
     return removeDupes(grid.map(dot => foldDot(dot, fold)));
 }
 
+function renderGrid(grid: Grid): string {
+    const maxX = Math.max(...grid.map(dot => dot.x));
+    const maxY = Math.max(...grid.map(dot => dot.y));
+
+    const serializedDots: Set<string> = new Set(grid.map(serializeDot));
+
+    let gridString = "";
+
+    for (let y = 0; y <= maxY; y++) {
+        for (let x = 0; x <= maxX; x++) {
+            if (serializedDots.has(serializeDot({x, y}))) {
+                gridString = gridString + "#";
+            } else {
+                gridString = gridString + ".";
+            }
+        }
+        gridString = gridString + "\n";
+    }
+
+    return gridString;
+}
+
 const DOT_PATTERN = /\d+,\d+/;
 const FOLD_PATTERN = /fold along (x|y)=(\d+)/;
 
@@ -50,5 +68,6 @@ const folds: Fold[] = lines.filter(l => l.match(FOLD_PATTERN)).map(l => {
     return { axis: axis, location: parseInt(location) };
 });
 
-console.log(grid.length);
 console.log("Part 1", foldGrid(grid, folds[0]).length);
+console.log("Part 2");
+console.log(renderGrid(folds.reduce((grid: Grid, fold: Fold) => foldGrid(grid, fold), grid)));

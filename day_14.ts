@@ -4,7 +4,7 @@ type Element = string;
 
 type PolymerTemplate = Element[];
 
-// key: character pair
+// key: character pair as a length-2 string because that's the only way JS knows how to hash keys correctly :) :) :) :)
 // value: number of occurrences in the template
 type TemplateMap = Map<string, number>;
 interface PairInsertionRule {
@@ -61,17 +61,18 @@ function applyInsertions(templateMap: TemplateMap, rules: PairInsertionRule[]): 
 }
 
 function calculateMinMaxDifferenceAfterIterations(initialTemplate: PolymerTemplate, rules: PairInsertionRule[], numIterations: number): number {
+    // Convert the template from a naive array-based impl to a map of pairs to counts.
     let templateMap = templateToMap(initialTemplate);
-    console.log(templateMap);
     for (let iteration = 0; iteration < numIterations; iteration++) {
-        console.log("performing iteration", iteration);
-        console.log(templateMap);
         templateMap = applyInsertions(templateMap, rules);
     }
 
+    // Convert the map form of a template to a map of individual element -> count
     const countsByElement: Map<Element, number> = templateMapToElementCounts(templateMap, initialTemplate[initialTemplate.length - 1]);
-    const [mostCommonElement, mostCommonElementCount] = maxBy([...countsByElement.entries()], entry => entry[1]);
-    const [leastCommonElement, leastCommonElementCount] = minBy([...countsByElement.entries()], entry => entry[1]);
+
+    // Calc difference between most common and least common
+    const [_mostCommonElement, mostCommonElementCount] = maxBy([...countsByElement.entries()], entry => entry[1]);
+    const [_leastCommonElement, leastCommonElementCount] = minBy([...countsByElement.entries()], entry => entry[1]);
     return mostCommonElementCount - leastCommonElementCount;
 }
 

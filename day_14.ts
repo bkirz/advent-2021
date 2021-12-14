@@ -1,8 +1,12 @@
-import { loadInput, maxBy, minBy, tally } from "./helpers";
+import { eachCons, loadInput, maxBy, minBy, tally } from "./helpers";
 
 type Element = string;
+
 type PolymerTemplate = Element[];
 
+// key: character pair
+// value: number of occurrences in the template
+type TemplateMap = Map<string, number>;
 interface PairInsertionRule {
     firstElem: Element,
     secondElem: Element,
@@ -13,21 +17,62 @@ function ruleToKVPair(rule: PairInsertionRule): [string, string] {
     return [rule.firstElem + rule.secondElem, rule.elemToInsert];
 }
 
-function applyInsertions(template: PolymerTemplate, rules: PairInsertionRule[]): PolymerTemplate {
+function addToTemplateMap(m: TemplateMap, pair: string, count: number): TemplateMap {
+    let oldCount = m.has(pair) ? m.get(pair) : 0;
+    return new Map([...m, [pair, count + oldCount]]);
+}
+
+function templateToMap(template: PolymerTemplate): TemplateMap {
+    let templateMap = new Map();
+    eachCons(template, 2).forEach(([first, second]) => templateMap = addToTemplateMap(templateMap, first + second, 1));
+    return templateMap;
+}
+
+function templateMapToElementCounts(templateMap: TemplateMap, lastElement: Element): Map<string, number> {
+    // Init the last element to 1 since it's the one value that isn't captured as the first element of a pair.
+    let counts = new Map([[lastElement, 1]]);
+
+    for (let [pair, count] of templateMap) {
+        const firstElem = pair.charAt(0);
+        const elemCount = counts.has(firstElem) ? counts.get(firstElem) + count : count;
+        counts.set(firstElem, elemCount);
+    }
+
+    return counts;
+}
+
+function applyInsertions(templateMap: TemplateMap, rules: PairInsertionRule[]): TemplateMap {
     const rulesMap: Map<string, string> = new Map(rules.map(ruleToKVPair));
 
-    let updatedTemplate = [];
-    for (let index = 0; index < template.length - 1; index++) {
-        updatedTemplate.push(template[index]);
-        const ruleKey = template[index] + template[index+1];
-        if (rulesMap.has(ruleKey)) {
-            const toInsert = rulesMap.get(ruleKey);
-            updatedTemplate.push(toInsert);
+    let newTemplateMap: TemplateMap = new Map();
+    for (let [pair, count] of templateMap) {
+        if (rulesMap.has(pair)) {
+            const firstPair = pair.charAt(0) + rulesMap.get(pair);
+            const secondPair = rulesMap.get(pair) + pair.charAt(1);
+
+            newTemplateMap = addToTemplateMap(newTemplateMap, firstPair, count);
+            newTemplateMap = addToTemplateMap(newTemplateMap, secondPair, count);
+        } else {
+            newTemplateMap = addToTemplateMap(newTemplateMap, pair, count);
         }
     }
-    updatedTemplate.push(template[template.length - 1]);
 
-    return updatedTemplate;
+    return newTemplateMap;
+}
+
+function calculateMinMaxDifferenceAfterIterations(initialTemplate: PolymerTemplate, rules: PairInsertionRule[], numIterations: number): number {
+    let templateMap = templateToMap(initialTemplate);
+    console.log(templateMap);
+    for (let iteration = 0; iteration < numIterations; iteration++) {
+        console.log("performing iteration", iteration);
+        console.log(templateMap);
+        templateMap = applyInsertions(templateMap, rules);
+    }
+
+    const countsByElement: Map<Element, number> = templateMapToElementCounts(templateMap, initialTemplate[initialTemplate.length - 1]);
+    const [mostCommonElement, mostCommonElementCount] = maxBy([...countsByElement.entries()], entry => entry[1]);
+    const [leastCommonElement, leastCommonElementCount] = minBy([...countsByElement.entries()], entry => entry[1]);
+    return mostCommonElementCount - leastCommonElementCount;
 }
 
 const RULE_PATTERN = /([A-Z])([A-Z]) -> ([A-Z])/;
@@ -40,12 +85,5 @@ const rules: PairInsertionRule[] = ruleStrs.map(str => {
     return {firstElem: first, secondElem: second, elemToInsert: toInsert};
 });
 
-let template = initialTemplate;
-for (let iteration = 0; iteration < 10; iteration++) {
-    template = applyInsertions(template, rules);
-}
-
-const countsByElement: Map<Element, number> = tally(template);
-const [mostCommonElement, mostCommonElementCount] = maxBy([...countsByElement.entries()], entry => entry[1]);
-const [leastCommonElement, leastCommonElementCount] = minBy([...countsByElement.entries()], entry => entry[1]);
-console.log("Part 1", mostCommonElementCount - leastCommonElementCount);
+console.log("Part 1", calculateMinMaxDifferenceAfterIterations(initialTemplate, rules, 10));
+console.log("Part 2", calculateMinMaxDifferenceAfterIterations(initialTemplate, rules, 40));

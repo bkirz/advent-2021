@@ -6,7 +6,7 @@ interface Point { row: number, col: number };
 
 const START = {row: 0, col: 0};
 
-function neighbors({row, col}: Point, grid: Grid) {
+function unvisitedNeighbors({row, col}: Point, grid: Grid, visited: boolean[][]) {
     const rowLength = grid[0].length;
     const colLength = grid.length;
 
@@ -15,7 +15,7 @@ function neighbors({row, col}: Point, grid: Grid) {
         {row: row - 1, col},
         {row, col: col + 1},
         {row, col: col - 1},
-    ].filter(({row, col}) => row >= 0 && row < colLength && col >= 0 && col < rowLength);
+    ].filter(({row, col}) => row >= 0 && row < colLength && col >= 0 && col < rowLength && !visited[row][col]);
 }
 
 function findLowestTotalRisk(grid: Grid): number {
@@ -26,7 +26,7 @@ function findLowestTotalRisk(grid: Grid): number {
     const destination = {row: grid.length - 1, col: grid[grid.length - 1].length - 1};
 
     const distances = grid.map(row => new Array(row.length).fill(Infinity));
-    const visited = grid.map(row => new Array(row.length).fill(false));
+    const visited: boolean[][] = grid.map(row => new Array(row.length).fill(false));
 
     const queue: Point[] = [];
 
@@ -42,12 +42,13 @@ function findLowestTotalRisk(grid: Grid): number {
         const currentNode = minBy(queue, ({row, col}) => distances[row][col]);
         queue.splice(queue.indexOf(currentNode), 1);
 
-        for (const neighbor of neighbors(currentNode, grid)) {
+        for (const neighbor of unvisitedNeighbors(currentNode, grid, visited)) {
             const newDistance = distances[currentNode.row][currentNode.col] + grid[neighbor.row][neighbor.col];
             if (newDistance < distances[neighbor.row][neighbor.col]) {
                 distances[neighbor.row][neighbor.col] = newDistance;
             }
         }
+        visited[currentNode.row][currentNode.col] = true;
     }
 
     return distances[destination.row][destination.col];

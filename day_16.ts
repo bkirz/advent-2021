@@ -28,7 +28,7 @@ type Packet = LiteralValuePacket | OperatorPacket;
 
 // All parse functions return a tuple with two components:
 // - The parsed value
-// - The remainder of the binary string with the sliced part removed
+// - The remainder of the binary string with the parsed part removed
 
 function parseLiteralValue(bin: string): [number, string] {
     let shouldContinue = '1';

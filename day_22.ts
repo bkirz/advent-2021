@@ -190,15 +190,6 @@ function subtractCuboid(cuboidSet: ImmutableHashSet<Cuboid>, subtrahend: Cuboid)
     return rest.merge(cuboidsAfterSubtraction);
 }
 
-// Count via tracking a set, S, of non-overlapping ON cuboids and then measuring their total volume at the end.
-// If the cuboid, c, is ON:
-//   if there is an overlapping cuboid in S, o: split c into a set of smaller, non-overlapping cuboids and attempt to add those recursively.
-//   if there is no overlapping cuboid in S, add c to S
-// If the cuboid, c, is OFF:
-//   if there is no overlapping cuboid in S, do nothing and continue
-//   if there is an overlapping cuboid in S, split it into a set of smaller cuboids such that they either fully overlap or are distinct.
-//      remove the overlapping cuboid from S and add the smaller cuboids that do not overlap c.
-// Finally, calc the volumes of the remaining cuboids.
 function countVoxelsThatAreOnMoreEfficiently(steps: RebootStep[]): number {
     let onCuboids = newCuboidSet([]);
 
@@ -214,15 +205,6 @@ function countVoxelsThatAreOnMoreEfficiently(steps: RebootStep[]): number {
                 onCuboids = subtractCuboid(onCuboids, cuboid);
                 break;
         }
-
-        /*
-        for (const c1 of onCuboids) {
-            for (const c2 of onCuboids) {
-                if (c1 === c2) { continue; }
-                assert(!cuboidsIntersect(c1, c2), `found unexpected intersection within cuboid set: ${formatCuboid(c1)} & ${formatCuboid(c2)}`);
-            }
-        }
-        */
     }
 
     return [...onCuboids].map(cuboidVolume).reduce((a, b) => a + b, 0);
@@ -252,5 +234,5 @@ const part1Bounds: Cuboid = {
     z: { start: -50, end: 50 },
 };
 
-// console.log("Part 1", naivelyCountVoxelsThatAreOn(steps, part1Bounds));
+console.log("Part 1", naivelyCountVoxelsThatAreOn(steps, part1Bounds));
 console.log("Part 2", countVoxelsThatAreOnMoreEfficiently(steps));

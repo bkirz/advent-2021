@@ -133,6 +133,41 @@ export function maxBy<T, U>(items: T[], transform: (elem: T) => U): T | undefine
   return items.reduce((a, b) => transform(a) > transform(b) ? a : b);
 }
 
+export function identity(x: any) { return x; }
+
+export function minmax<T>(items: Iterable<T>, transform: (elem: T) => number = identity): [T, T] {
+  if ([...items].length === 0) { throw new Error("Can't calculate minmax on an empty input."); }
+
+  let min = Number.MAX_VALUE;
+  let minElem = undefined;
+  let max = Number.MIN_VALUE;
+  let maxElem = undefined;
+
+  for (const elem of items) {
+    const numeric = transform(elem);
+    if (numeric <= min) { min = numeric; minElem = elem; }
+    if (numeric >= max) { max = numeric; maxElem = elem; }
+  }
+
+  return [minElem, maxElem];
+}
+
+export type HashValue = string | number;
+export interface Hashable { hash: () => HashValue; };
+
+export class ImmutableSet<T extends Hashable> {
+  private _map: Map<HashValue, T>;
+
+  constructor(values: Iterable<T>) {
+    this._map = new Map([...values].map(v => [v.hash(), v]));
+  }
+
+  add(value: T) { return new ImmutableSet([...this, value]); }
+  has(value: T) { return this._map.has(value.hash()); }
+
+  [Symbol.iterator](): Iterator<T, any, undefined> { return this._map.values(); }
+}
+
 export class ImmutableHashSet<T> implements Iterable<T> {
   // Because Javascript Sets and Maps don't support custom object hashing for
   // builtin maps and sets, we can implement a Set via map of Hash(T) => T.

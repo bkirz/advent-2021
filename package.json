@@ -25,6 +25,7 @@
     "day16": "cp day_16.input dist && tsc && node dist/day_16.js",
     "day17": "cp day_17.input dist && tsc && node dist/day_17.js",
     "day18": "cp day_18.input dist && tsc && node dist/day_18.js",
+    "day20": "cp day_20.input dist && tsc && node dist/day_20.js",
     "day21": "cp day_21.input dist && tsc && node dist/day_21.js",
     "day22": "cp day_22.input dist && tsc && node dist/day_22.js"
   },

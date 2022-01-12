@@ -81,7 +81,6 @@ function enhance(image: Image, algorithm: string): Image {
             Pixel.of(pixel.x - 1, pixel.y + 1), Pixel.of(pixel.x, pixel.y + 1), Pixel.of(pixel.x + 1, pixel.y + 1),
         ];
 
-        // TODO: Handle the case where an OOB pixel is ON.
         const bitString = pixelsInBitOrder.map(pixel => image.has(pixel) ? '1' : '0').join('');
         const position = parseInt(bitString, 2);
         return algorithm.charAt(position) === ON_CHAR;

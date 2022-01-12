@@ -6,7 +6,10 @@ const ALGORITHM_STRING_LENGTH = 512;
 /*  Data Model:
  *  - Image coordinates use the top-left corner of the original pixelSet as (0,0)
  *    with x increasing to the right and y increasing downwards.
- *  - Images are stored as Sets of coordinates, which can be negative.
+ *  - Images are modeled using:
+ *      - a tuple of a Set of coordinates of ON pixels within a set of tracked bounds.
+ *      - a boolean state tracking the state of all pixels out of tracked bounds,
+ *        necessary to model the case where bit 0 is ON in the algorithm string.
  */
 
 type AlgorithmString = string;

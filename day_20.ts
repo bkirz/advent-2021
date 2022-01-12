@@ -138,12 +138,6 @@ function parseInput(input: string): [Image, AlgorithmString] {
     return [image, algorithmString];
 }
 
-// TODO: Puzzle input has 0 mapped to # and 512 mapped to .,
-// meaning the entirety of the grid outside the provided set alternates between
-// # and . with each tick. The sample input doesn't behave that way! Fucked up.
-// 
-// One idea: Make Image a class that also includes its own bounds.
-// Then, calculate the default OOB state and store that separately from the set.
 function part1(input: string) {
     const [image, algorithmString] = parseInput(input);
     console.log("Starting Image");

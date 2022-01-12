@@ -27,7 +27,7 @@ class Image {
     has(pixel: Pixel): boolean {
         if (this.bounds.x.min <= pixel.x && pixel.x <= this.bounds.x.max &&
                 this.bounds.y.min <= pixel.y && pixel.y <= this.bounds.y.max) {
-            return this.pixels.has(pixel); // TODO
+            return this.pixels.has(pixel);
         } else {
             return this.outOfBoundsOn;
         }
